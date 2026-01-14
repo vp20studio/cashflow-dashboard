@@ -94,7 +94,7 @@ export function CashFlowCharts() {
                   padding: '8px 12px',
                 }}
                 labelStyle={{ color: '#fafafa', marginBottom: '4px' }}
-                formatter={(value: number, name: string) => [formatCurrency(value), name]}
+                formatter={(value) => formatCurrency(Number(value))}
               />
               <Legend wrapperStyle={{ paddingTop: '10px' }} />
               <Line
@@ -160,7 +160,7 @@ export function CashFlowCharts() {
                   padding: '8px 12px',
                 }}
                 labelStyle={{ color: '#fafafa', marginBottom: '4px' }}
-                formatter={(value: number, name: string) => [formatCurrency(value), name]}
+                formatter={(value) => formatCurrency(Number(value))}
                 cursor={{ fill: '#262626' }}
               />
               <Legend wrapperStyle={{ paddingTop: '10px' }} />

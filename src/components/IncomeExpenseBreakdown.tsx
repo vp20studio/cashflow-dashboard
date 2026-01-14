@@ -66,7 +66,7 @@ export function IncomeExpenseBreakdown() {
                     borderRadius: '8px',
                     padding: '8px 12px',
                   }}
-                  formatter={(value: number) => [formatCurrency(value), 'Amount']}
+                  formatter={(value) => formatCurrency(Number(value))}
                 />
                 <Legend
                   wrapperStyle={{ paddingTop: '10px' }}
@@ -110,7 +110,7 @@ export function IncomeExpenseBreakdown() {
                     borderRadius: '8px',
                     padding: '8px 12px',
                   }}
-                  formatter={(value: number) => [formatCurrency(value), 'Amount']}
+                  formatter={(value) => formatCurrency(Number(value))}
                 />
                 <Legend
                   wrapperStyle={{ paddingTop: '10px' }}
