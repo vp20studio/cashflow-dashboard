@@ -76,7 +76,7 @@ function SortableItem({ item, onEdit, onDelete }: SortableItemProps) {
           </Badge>
         </div>
       </div>
-      <span className={`font-semibold tabular-nums text-right w-28 ${item.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
+      <span className={`font-semibold tabular-nums text-right min-w-[7rem] shrink-0 ${item.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
         {formatCurrency(item.amount)}
       </span>
       <div className="opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity">
