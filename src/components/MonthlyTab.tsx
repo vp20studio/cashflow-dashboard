@@ -10,11 +10,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { useCashFlow } from '@/lib/cashflow-context';
 import { formatCurrency } from '@/lib/formatters';
-import { LineItem, MonthData } from '@/lib/types';
+import { LineItem } from '@/lib/types';
 import {
   DndContext,
   closestCenter,
@@ -219,63 +218,6 @@ export function MonthlyTab() {
     deleteLineItem(selectedMonth.id, itemId);
   };
 
-  const FormContent = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4">
-      <div>
-        <label className="text-sm text-muted-foreground">Name</label>
-        <Input
-          value={formName}
-          onChange={(e) => setFormName(e.target.value)}
-          placeholder="e.g., Salary, Rent"
-          className="bg-secondary border-border mt-1"
-        />
-      </div>
-      <div>
-        <label className="text-sm text-muted-foreground">Amount</label>
-        <Input
-          type="number"
-          value={formAmount}
-          onChange={(e) => setFormAmount(e.target.value)}
-          placeholder="0.00"
-          className="bg-secondary border-border mt-1"
-        />
-      </div>
-      <div>
-        <label className="text-sm text-muted-foreground">Type</label>
-        <div className="flex gap-2 mt-1">
-          <Button
-            type="button"
-            variant={formType === 'income' ? 'default' : 'outline'}
-            className={formType === 'income' ? 'bg-green-600 hover:bg-green-700 flex-1' : 'flex-1'}
-            onClick={() => setFormType('income')}
-          >
-            Income
-          </Button>
-          <Button
-            type="button"
-            variant={formType === 'expense' ? 'default' : 'outline'}
-            className={formType === 'expense' ? 'bg-red-600 hover:bg-red-700 flex-1' : 'flex-1'}
-            onClick={() => setFormType('expense')}
-          >
-            Expense
-          </Button>
-        </div>
-      </div>
-      <div>
-        <label className="text-sm text-muted-foreground">Category</label>
-        <Input
-          value={formCategory}
-          onChange={(e) => setFormCategory(e.target.value)}
-          placeholder="e.g., Housing, Food"
-          className="bg-secondary border-border mt-1"
-        />
-      </div>
-      <Button onClick={onSubmit} className="w-full">
-        {submitLabel}
-      </Button>
-    </div>
-  );
-
   if (!selectedMonth) return null;
 
   return (
@@ -465,7 +407,60 @@ export function MonthlyTab() {
           <DialogHeader>
             <DialogTitle>Add {addType === 'income' ? 'Income' : 'Expense'}</DialogTitle>
           </DialogHeader>
-          <FormContent onSubmit={handleAdd} submitLabel="Add Item" />
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-muted-foreground">Name</label>
+              <Input
+                value={formName}
+                onChange={(e) => setFormName(e.target.value)}
+                placeholder="e.g., Salary, Rent"
+                className="bg-secondary border-border mt-1"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Amount</label>
+              <Input
+                type="number"
+                value={formAmount}
+                onChange={(e) => setFormAmount(e.target.value)}
+                placeholder="0.00"
+                className="bg-secondary border-border mt-1"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Type</label>
+              <div className="flex gap-2 mt-1">
+                <Button
+                  type="button"
+                  variant={formType === 'income' ? 'default' : 'outline'}
+                  className={formType === 'income' ? 'bg-green-600 hover:bg-green-700 flex-1' : 'flex-1'}
+                  onClick={() => setFormType('income')}
+                >
+                  Income
+                </Button>
+                <Button
+                  type="button"
+                  variant={formType === 'expense' ? 'default' : 'outline'}
+                  className={formType === 'expense' ? 'bg-red-600 hover:bg-red-700 flex-1' : 'flex-1'}
+                  onClick={() => setFormType('expense')}
+                >
+                  Expense
+                </Button>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Category</label>
+              <Input
+                value={formCategory}
+                onChange={(e) => setFormCategory(e.target.value)}
+                placeholder="e.g., Housing, Food"
+                className="bg-secondary border-border mt-1"
+              />
+            </div>
+            <Button onClick={handleAdd} className="w-full">
+              Add Item
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -475,7 +470,60 @@ export function MonthlyTab() {
           <DialogHeader>
             <DialogTitle>Edit Line Item</DialogTitle>
           </DialogHeader>
-          <FormContent onSubmit={handleEdit} submitLabel="Save Changes" />
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-muted-foreground">Name</label>
+              <Input
+                value={formName}
+                onChange={(e) => setFormName(e.target.value)}
+                placeholder="e.g., Salary, Rent"
+                className="bg-secondary border-border mt-1"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Amount</label>
+              <Input
+                type="number"
+                value={formAmount}
+                onChange={(e) => setFormAmount(e.target.value)}
+                placeholder="0.00"
+                className="bg-secondary border-border mt-1"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Type</label>
+              <div className="flex gap-2 mt-1">
+                <Button
+                  type="button"
+                  variant={formType === 'income' ? 'default' : 'outline'}
+                  className={formType === 'income' ? 'bg-green-600 hover:bg-green-700 flex-1' : 'flex-1'}
+                  onClick={() => setFormType('income')}
+                >
+                  Income
+                </Button>
+                <Button
+                  type="button"
+                  variant={formType === 'expense' ? 'default' : 'outline'}
+                  className={formType === 'expense' ? 'bg-red-600 hover:bg-red-700 flex-1' : 'flex-1'}
+                  onClick={() => setFormType('expense')}
+                >
+                  Expense
+                </Button>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Category</label>
+              <Input
+                value={formCategory}
+                onChange={(e) => setFormCategory(e.target.value)}
+                placeholder="e.g., Housing, Food"
+                className="bg-secondary border-border mt-1"
+              />
+            </div>
+            <Button onClick={handleEdit} className="w-full">
+              Save Changes
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
