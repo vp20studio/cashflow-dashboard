@@ -8,7 +8,7 @@ import { formatCurrency } from '@/lib/formatters';
 export function IncomeExpenseBreakdown() {
   const { state } = useCashFlow();
 
-  const { incomeBySource, expenseByCategory } = useMemo(() => {
+  const { incomeBySource, expenseByCategory, totalIncome, totalExpenses } = useMemo(() => {
     const incomeBySource: Record<string, number> = {};
     const expenseByCategory: Record<string, number> = {};
 
@@ -22,11 +22,14 @@ export function IncomeExpenseBreakdown() {
       });
     });
 
+    const totalIncome = Object.values(incomeBySource).reduce((sum, val) => sum + val, 0);
+    const totalExpenses = Object.values(expenseByCategory).reduce((sum, val) => sum + val, 0);
+
     return {
-      incomeBySource: Object.entries(incomeBySource)
-        .sort((a, b) => b[1] - a[1]),
-      expenseByCategory: Object.entries(expenseByCategory)
-        .sort((a, b) => b[1] - a[1]),
+      incomeBySource: Object.entries(incomeBySource).sort((a, b) => b[1] - a[1]),
+      expenseByCategory: Object.entries(expenseByCategory).sort((a, b) => b[1] - a[1]),
+      totalIncome,
+      totalExpenses,
     };
   }, [state.months]);
 
@@ -38,14 +41,31 @@ export function IncomeExpenseBreakdown() {
         </CardHeader>
         <CardContent>
           {incomeBySource.length > 0 ? (
-            <div className="space-y-3">
-              {incomeBySource.map(([name, amount]) => (
-                <div key={name} className="flex justify-between items-center">
-                  <span className="text-foreground">{name}</span>
-                  <span className="text-green-500 font-medium">{formatCurrency(amount)}</span>
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="space-y-2">
+                {incomeBySource.map(([name, amount]) => {
+                  const percent = totalIncome > 0 ? (amount / totalIncome) * 100 : 0;
+                  return (
+                    <div key={name} className="flex items-center gap-3">
+                      <span className="text-foreground flex-1">{name}</span>
+                      <span className="text-muted-foreground text-sm w-14 text-right">
+                        {percent.toFixed(0)}%
+                      </span>
+                      <span className="text-green-500 font-medium w-28 text-right">
+                        {formatCurrency(amount)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="border-t border-border mt-4 pt-4 flex items-center gap-3">
+                <span className="text-foreground font-semibold flex-1">Total</span>
+                <span className="text-muted-foreground text-sm w-14 text-right">100%</span>
+                <span className="text-green-500 font-bold w-28 text-right">
+                  {formatCurrency(totalIncome)}
+                </span>
+              </div>
+            </>
           ) : (
             <div className="py-8 text-center text-muted-foreground">
               No income data
@@ -60,14 +80,31 @@ export function IncomeExpenseBreakdown() {
         </CardHeader>
         <CardContent>
           {expenseByCategory.length > 0 ? (
-            <div className="space-y-3">
-              {expenseByCategory.map(([name, amount]) => (
-                <div key={name} className="flex justify-between items-center">
-                  <span className="text-foreground">{name}</span>
-                  <span className="text-red-500 font-medium">{formatCurrency(amount)}</span>
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="space-y-2">
+                {expenseByCategory.map(([name, amount]) => {
+                  const percent = totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0;
+                  return (
+                    <div key={name} className="flex items-center gap-3">
+                      <span className="text-foreground flex-1">{name}</span>
+                      <span className="text-muted-foreground text-sm w-14 text-right">
+                        {percent.toFixed(0)}%
+                      </span>
+                      <span className="text-red-500 font-medium w-28 text-right">
+                        {formatCurrency(amount)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="border-t border-border mt-4 pt-4 flex items-center gap-3">
+                <span className="text-foreground font-semibold flex-1">Total</span>
+                <span className="text-muted-foreground text-sm w-14 text-right">100%</span>
+                <span className="text-red-500 font-bold w-28 text-right">
+                  {formatCurrency(totalExpenses)}
+                </span>
+              </div>
+            </>
           ) : (
             <div className="py-8 text-center text-muted-foreground">
               No expense data
