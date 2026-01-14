@@ -47,19 +47,20 @@ export function InvestmentsTab() {
   // Form state
   const [selectedAsset, setSelectedAsset] = useState(CRYPTO_OPTIONS[2]); // Default to LTC
   const [formEntryPrice, setFormEntryPrice] = useState('');
-  const [formInvestmentAmount, setFormInvestmentAmount] = useState('');
+  const [formQuantity, setFormQuantity] = useState(''); // Position size in asset
+  const [formInvestmentAmount, setFormInvestmentAmount] = useState(''); // Actual cash invested
   const [formLeverage, setFormLeverage] = useState('1');
   const [formStopLoss, setFormStopLoss] = useState('');
   const [formTarget, setFormTarget] = useState('');
 
   // Calculate overall P/L
   const overallPL = state.investments.reduce((acc, inv) => {
-    const { pl } = calculatePL(inv.entryPrice, inv.currentPrice, inv.quantity, inv.leverage);
+    const { pl } = calculatePL(inv.entryPrice, inv.currentPrice, inv.quantity, inv.investedAmount);
     return acc + pl;
   }, 0);
 
   const totalInvested = state.investments.reduce((acc, inv) => {
-    return acc + (inv.entryPrice * inv.quantity);
+    return acc + inv.investedAmount;
   }, 0);
 
   const overallPLPercent = totalInvested > 0 ? (overallPL / totalInvested) * 100 : 0;
@@ -73,6 +74,7 @@ export function InvestmentsTab() {
   const resetForm = () => {
     setSelectedAsset(CRYPTO_OPTIONS[2]);
     setFormEntryPrice('');
+    setFormQuantity('');
     setFormInvestmentAmount('');
     setFormLeverage('1');
     setFormStopLoss('');
@@ -80,11 +82,11 @@ export function InvestmentsTab() {
   };
 
   const handleAdd = () => {
-    if (!formEntryPrice || !formInvestmentAmount) return;
+    if (!formEntryPrice || !formQuantity || !formInvestmentAmount) return;
 
     const entryPrice = parseFloat(formEntryPrice);
+    const quantity = parseFloat(formQuantity);
     const investmentAmount = parseFloat(formInvestmentAmount);
-    const quantity = investmentAmount / entryPrice;
 
     addInvestment({
       asset: selectedAsset.name,
@@ -93,6 +95,7 @@ export function InvestmentsTab() {
       entryPrice,
       currentPrice: entryPrice, // Will be updated on next price fetch
       quantity,
+      investedAmount: investmentAmount,
       leverage: parseFloat(formLeverage) || 1,
       stopLoss: parseFloat(formStopLoss) || 0,
       target: parseFloat(formTarget) || 0,
@@ -105,11 +108,11 @@ export function InvestmentsTab() {
   };
 
   const handleEdit = () => {
-    if (!editingInvestment || !formEntryPrice || !formInvestmentAmount) return;
+    if (!editingInvestment || !formEntryPrice || !formQuantity || !formInvestmentAmount) return;
 
     const entryPrice = parseFloat(formEntryPrice);
+    const quantity = parseFloat(formQuantity);
     const investmentAmount = parseFloat(formInvestmentAmount);
-    const quantity = investmentAmount / entryPrice;
 
     updateInvestment({
       ...editingInvestment,
@@ -118,6 +121,7 @@ export function InvestmentsTab() {
       coingeckoId: selectedAsset.coingeckoId,
       entryPrice,
       quantity,
+      investedAmount: investmentAmount,
       leverage: parseFloat(formLeverage) || 1,
       stopLoss: parseFloat(formStopLoss) || 0,
       target: parseFloat(formTarget) || 0,
@@ -133,7 +137,8 @@ export function InvestmentsTab() {
     const asset = CRYPTO_OPTIONS.find(a => a.coingeckoId === inv.coingeckoId) || CRYPTO_OPTIONS[0];
     setSelectedAsset(asset);
     setFormEntryPrice(inv.entryPrice.toString());
-    setFormInvestmentAmount((inv.entryPrice * inv.quantity).toString());
+    setFormQuantity(inv.quantity.toString());
+    setFormInvestmentAmount(inv.investedAmount.toString());
     setFormLeverage(inv.leverage.toString());
     setFormStopLoss(inv.stopLoss.toString());
     setFormTarget(inv.target.toString());
@@ -165,20 +170,31 @@ export function InvestmentsTab() {
             type="number"
             value={formEntryPrice}
             onChange={(e) => setFormEntryPrice(e.target.value)}
-            placeholder="0.00"
-            className="bg-secondary border-border"
+            placeholder="109.00"
+            className="bg-secondary border-border mt-1"
           />
         </div>
         <div>
-          <label className="text-sm text-muted-foreground">Investment Amount (CAD)</label>
+          <label className="text-sm text-muted-foreground">Position Size ({selectedAsset.symbol})</label>
           <Input
             type="number"
-            value={formInvestmentAmount}
-            onChange={(e) => setFormInvestmentAmount(e.target.value)}
-            placeholder="0.00"
-            className="bg-secondary border-border"
+            value={formQuantity}
+            onChange={(e) => setFormQuantity(e.target.value)}
+            placeholder="250"
+            className="bg-secondary border-border mt-1"
           />
         </div>
+      </div>
+      <div>
+        <label className="text-sm text-muted-foreground">Cash Invested (CAD)</label>
+        <Input
+          type="number"
+          value={formInvestmentAmount}
+          onChange={(e) => setFormInvestmentAmount(e.target.value)}
+          placeholder="7700"
+          className="bg-secondary border-border mt-1"
+        />
+        <p className="text-xs text-muted-foreground mt-1">Your actual cash investment (return % will be based on this)</p>
       </div>
       <div>
         <label className="text-sm text-muted-foreground">Leverage</label>
@@ -203,8 +219,8 @@ export function InvestmentsTab() {
             type="number"
             value={formStopLoss}
             onChange={(e) => setFormStopLoss(e.target.value)}
-            placeholder="0.00"
-            className="bg-secondary border-border"
+            placeholder="73"
+            className="bg-secondary border-border mt-1"
           />
         </div>
         <div>
@@ -213,8 +229,8 @@ export function InvestmentsTab() {
             type="number"
             value={formTarget}
             onChange={(e) => setFormTarget(e.target.value)}
-            placeholder="0.00"
-            className="bg-secondary border-border"
+            placeholder="330"
+            className="bg-secondary border-border mt-1"
           />
         </div>
       </div>
@@ -312,9 +328,8 @@ export function InvestmentsTab() {
             </TableHeader>
             <TableBody>
               {state.investments.map((inv) => {
-                const { pl, plPercent } = calculatePL(inv.entryPrice, inv.currentPrice, inv.quantity, inv.leverage);
+                const { pl, plPercent } = calculatePL(inv.entryPrice, inv.currentPrice, inv.quantity, inv.investedAmount);
                 const isProfit = pl >= 0;
-                const investmentValue = inv.entryPrice * inv.quantity;
 
                 // Check proximity to SL or TP
                 const distanceToSL = inv.stopLoss > 0 ? ((inv.currentPrice - inv.stopLoss) / inv.stopLoss) * 100 : Infinity;
@@ -339,7 +354,7 @@ export function InvestmentsTab() {
                     <TableCell className="text-right tabular-nums">
                       {inv.quantity.toFixed(2)} {inv.symbol}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">{formatCurrency(investmentValue)}</TableCell>
+                    <TableCell className="text-right tabular-nums">{formatCurrency(inv.investedAmount)}</TableCell>
                     <TableCell className="text-center">
                       <Badge variant={inv.leverage > 1 ? 'default' : 'outline'}>
                         {inv.leverage}x

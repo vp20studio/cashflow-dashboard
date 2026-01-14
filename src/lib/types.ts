@@ -22,7 +22,8 @@ export interface Investment {
   coingeckoId: string;
   entryPrice: number;
   currentPrice: number;
-  quantity: number;
+  quantity: number; // Actual position size in the asset (e.g., 250 LTC)
+  investedAmount: number; // Actual cash invested (e.g., $7,700 CAD)
   leverage: number;
   stopLoss: number;
   target: number;

@@ -40,12 +40,12 @@ export function calculatePL(
   entryPrice: number,
   currentPrice: number,
   quantity: number,
-  leverage: number
+  investedAmount: number
 ): { pl: number; plPercent: number } {
-  const rawPL = (currentPrice - entryPrice) * quantity;
-  const leveragedPL = rawPL * leverage;
-  const initialInvestment = entryPrice * quantity;
-  const plPercent = initialInvestment > 0 ? (leveragedPL / initialInvestment) * 100 : 0;
+  // P/L is simply the price change times the position quantity
+  const pl = (currentPrice - entryPrice) * quantity;
+  // Return % is based on actual cash invested
+  const plPercent = investedAmount > 0 ? (pl / investedAmount) * 100 : 0;
 
-  return { pl: leveragedPL, plPercent };
+  return { pl, plPercent };
 }
