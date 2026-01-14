@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CashFlowProvider } from '@/lib/cashflow-context';
 import { SummaryCards } from '@/components/SummaryCards';
 import { CashFlowCharts } from '@/components/CashFlowCharts';
+import { CalendarView } from '@/components/CalendarView';
 import { IncomeExpenseBreakdown } from '@/components/IncomeExpenseBreakdown';
 import { MonthlyTab } from '@/components/MonthlyTab';
 import { InvestmentsTab } from '@/components/InvestmentsTab';
@@ -36,6 +37,7 @@ function DashboardContent() {
           <TabsContent value="dashboard" className="space-y-4">
             <SummaryCards />
             <CashFlowCharts />
+            <CalendarView />
             <IncomeExpenseBreakdown />
           </TabsContent>
 
