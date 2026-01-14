@@ -243,21 +243,25 @@ export function InvestmentsTab() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground">Total Invested</p>
-              <p className="text-2xl font-bold">{formatCurrency(totalInvested)}</p>
+              <p className="text-sm text-muted-foreground">Invested (CAD)</p>
+              <p className="text-2xl font-bold tabular-nums">{formatCurrency(totalInvested)}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Overall P/L</p>
-              <p className={`text-2xl font-bold ${overallPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {formatCurrency(overallPL)}
+              <p className="text-sm text-muted-foreground">Current Value</p>
+              <p className="text-2xl font-bold tabular-nums">{formatCurrency(totalInvested + overallPL)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Overall P/L (CAD)</p>
+              <p className={`text-2xl font-bold tabular-nums ${overallPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                {overallPL >= 0 ? '+' : ''}{formatCurrency(overallPL)}
               </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Return %</p>
-              <p className={`text-2xl font-bold ${overallPLPercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {formatPercent(overallPLPercent)}
+              <p className={`text-2xl font-bold tabular-nums ${overallPLPercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                {overallPLPercent >= 0 ? '+' : ''}{formatPercent(overallPLPercent)}
               </p>
             </div>
           </div>
@@ -297,7 +301,8 @@ export function InvestmentsTab() {
                 <TableHead>Asset</TableHead>
                 <TableHead className="text-right">Entry</TableHead>
                 <TableHead className="text-right">Current</TableHead>
-                <TableHead className="text-right">Size</TableHead>
+                <TableHead className="text-right">Qty</TableHead>
+                <TableHead className="text-right">Invested</TableHead>
                 <TableHead className="text-center">Lev</TableHead>
                 <TableHead className="text-right">SL / TP</TableHead>
                 <TableHead className="text-right">P/L</TableHead>
@@ -327,11 +332,14 @@ export function InvestmentsTab() {
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell className="text-right">{formatCurrency(inv.entryPrice)}</TableCell>
-                    <TableCell className="text-right font-medium">
+                    <TableCell className="text-right tabular-nums">{formatCurrency(inv.entryPrice)}</TableCell>
+                    <TableCell className="text-right tabular-nums font-medium">
                       {formatCurrency(inv.currentPrice)}
                     </TableCell>
-                    <TableCell className="text-right">{formatCurrency(investmentValue)}</TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {inv.quantity.toFixed(2)} {inv.symbol}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">{formatCurrency(investmentValue)}</TableCell>
                     <TableCell className="text-center">
                       <Badge variant={inv.leverage > 1 ? 'default' : 'outline'}>
                         {inv.leverage}x
@@ -349,13 +357,13 @@ export function InvestmentsTab() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className={`text-right font-medium ${isProfit ? 'text-green-500' : 'text-red-500'}`}>
+                    <TableCell className={`text-right tabular-nums font-medium ${isProfit ? 'text-green-500' : 'text-red-500'}`}>
                       <div className="flex items-center justify-end gap-1">
                         {isProfit ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
                         {formatCurrency(pl)}
                       </div>
                     </TableCell>
-                    <TableCell className={`text-right font-medium ${isProfit ? 'text-green-500' : 'text-red-500'}`}>
+                    <TableCell className={`text-right tabular-nums font-medium ${isProfit ? 'text-green-500' : 'text-red-500'}`}>
                       {formatPercent(plPercent)}
                     </TableCell>
                     <TableCell>
@@ -383,7 +391,7 @@ export function InvestmentsTab() {
               })}
               {state.investments.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
                     No positions yet. Add your first position to start tracking.
                   </TableCell>
                 </TableRow>
