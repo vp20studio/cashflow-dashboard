@@ -59,7 +59,7 @@ function SortableItem({ item, onEdit, onDelete }: SortableItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-3 p-3 bg-secondary/30 rounded-lg group hover:bg-secondary/50 transition-colors"
+      className="relative flex items-center gap-3 p-3 bg-secondary/30 rounded-lg group hover:bg-secondary/50 transition-colors"
     >
       <button
         {...attributes}
@@ -68,16 +68,16 @@ function SortableItem({ item, onEdit, onDelete }: SortableItemProps) {
       >
         <GripVertical className="h-4 w-4" />
       </button>
-      <div className="flex items-center gap-2 min-w-0">
+      <div className="flex items-center gap-2 min-w-0 flex-1">
         <span className="font-medium truncate">{item.name}</span>
         <Badge variant="outline" className="text-xs shrink-0">
           {item.category}
         </Badge>
       </div>
-      <span className={`font-semibold tabular-nums text-right w-28 ${item.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
+      <span className={`font-semibold tabular-nums ${item.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
         {formatCurrency(item.amount)}
       </span>
-      <div className="opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity w-16">
+      <div className="absolute right-2 opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity bg-secondary/90 rounded p-1">
         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onEdit(item)}>
           <Pencil className="h-3 w-3" />
         </Button>
