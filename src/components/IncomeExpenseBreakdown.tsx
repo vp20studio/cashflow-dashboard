@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCashFlow } from '@/lib/cashflow-context';
 import { formatCurrency } from '@/lib/formatters';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, PieLabelRenderProps } from 'recharts';
 
 const INCOME_COLORS = ['#22c55e', '#16a34a', '#15803d', '#166534', '#14532d'];
 const EXPENSE_COLORS = ['#ef4444', '#dc2626', '#b91c1c', '#991b1b', '#7f1d1d', '#f97316', '#ea580c', '#c2410c'];
@@ -45,14 +45,12 @@ export function IncomeExpenseBreakdown() {
     return null;
   };
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: {
-    cx: number;
-    cy: number;
-    midAngle: number;
-    innerRadius: number;
-    outerRadius: number;
-    percent: number;
-  }) => {
+  const renderCustomizedLabel = (props: PieLabelRenderProps) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
+    if (typeof cx !== 'number' || typeof cy !== 'number' || typeof midAngle !== 'number' ||
+        typeof innerRadius !== 'number' || typeof outerRadius !== 'number' || typeof percent !== 'number') {
+      return null;
+    }
     if (percent < 0.05) return null;
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
