@@ -145,101 +145,6 @@ export function InvestmentsTab() {
     setIsEditDialogOpen(true);
   };
 
-  const FormContent = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4">
-      <div>
-        <label className="text-sm text-muted-foreground">Asset</label>
-        <div className="grid grid-cols-4 gap-2 mt-1">
-          {CRYPTO_OPTIONS.map((asset) => (
-            <Button
-              key={asset.coingeckoId}
-              type="button"
-              variant={selectedAsset.coingeckoId === asset.coingeckoId ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setSelectedAsset(asset)}
-            >
-              {asset.symbol}
-            </Button>
-          ))}
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
-          <Input
-            type="number"
-            value={formEntryPrice}
-            onChange={(e) => setFormEntryPrice(e.target.value)}
-            placeholder="109.00"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm text-muted-foreground">Position Size ({selectedAsset.symbol})</label>
-          <Input
-            type="number"
-            value={formQuantity}
-            onChange={(e) => setFormQuantity(e.target.value)}
-            placeholder="250"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-      </div>
-      <div>
-        <label className="text-sm text-muted-foreground">Cash Invested (CAD)</label>
-        <Input
-          type="number"
-          value={formInvestmentAmount}
-          onChange={(e) => setFormInvestmentAmount(e.target.value)}
-          placeholder="7700"
-          className="bg-secondary border-border mt-1"
-        />
-        <p className="text-xs text-muted-foreground mt-1">Your actual cash investment (return % will be based on this)</p>
-      </div>
-      <div>
-        <label className="text-sm text-muted-foreground">Leverage</label>
-        <div className="flex gap-2 mt-1">
-          {[1, 2, 3, 5, 10].map((lev) => (
-            <Button
-              key={lev}
-              type="button"
-              variant={formLeverage === lev.toString() ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setFormLeverage(lev.toString())}
-            >
-              {lev}x
-            </Button>
-          ))}
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
-          <Input
-            type="number"
-            value={formStopLoss}
-            onChange={(e) => setFormStopLoss(e.target.value)}
-            placeholder="73"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm text-muted-foreground">Target (CAD)</label>
-          <Input
-            type="number"
-            value={formTarget}
-            onChange={(e) => setFormTarget(e.target.value)}
-            placeholder="330"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-      </div>
-      <Button onClick={onSubmit} className="w-full">
-        {submitLabel}
-      </Button>
-    </div>
-  );
-
   return (
     <div className="space-y-4">
       {/* Overall P/L Card */}
@@ -305,7 +210,98 @@ export function InvestmentsTab() {
                 <DialogHeader>
                   <DialogTitle>Add Position</DialogTitle>
                 </DialogHeader>
-                <FormContent onSubmit={handleAdd} submitLabel="Add Position" />
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm text-muted-foreground">Asset</label>
+                    <div className="grid grid-cols-4 gap-2 mt-1">
+                      {CRYPTO_OPTIONS.map((asset) => (
+                        <Button
+                          key={asset.coingeckoId}
+                          type="button"
+                          variant={selectedAsset.coingeckoId === asset.coingeckoId ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setSelectedAsset(asset)}
+                        >
+                          {asset.symbol}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
+                      <Input
+                        type="number"
+                        value={formEntryPrice}
+                        onChange={(e) => setFormEntryPrice(e.target.value)}
+                        placeholder="109.00"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">Position Size ({selectedAsset.symbol})</label>
+                      <Input
+                        type="number"
+                        value={formQuantity}
+                        onChange={(e) => setFormQuantity(e.target.value)}
+                        placeholder="250"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground">Cash Invested (CAD)</label>
+                    <Input
+                      type="number"
+                      value={formInvestmentAmount}
+                      onChange={(e) => setFormInvestmentAmount(e.target.value)}
+                      placeholder="7700"
+                      className="bg-secondary border-border mt-1"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">Your actual cash investment (return % based on this)</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground">Leverage</label>
+                    <div className="flex gap-2 mt-1">
+                      {[1, 2, 3, 5, 10].map((lev) => (
+                        <Button
+                          key={lev}
+                          type="button"
+                          variant={formLeverage === lev.toString() ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setFormLeverage(lev.toString())}
+                        >
+                          {lev}x
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
+                      <Input
+                        type="number"
+                        value={formStopLoss}
+                        onChange={(e) => setFormStopLoss(e.target.value)}
+                        placeholder="73"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">Target (CAD)</label>
+                      <Input
+                        type="number"
+                        value={formTarget}
+                        onChange={(e) => setFormTarget(e.target.value)}
+                        placeholder="330"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                  </div>
+                  <Button onClick={handleAdd} className="w-full">
+                    Add Position
+                  </Button>
+                </div>
               </DialogContent>
             </Dialog>
           </div>
@@ -421,7 +417,98 @@ export function InvestmentsTab() {
           <DialogHeader>
             <DialogTitle>Edit Position</DialogTitle>
           </DialogHeader>
-          <FormContent onSubmit={handleEdit} submitLabel="Save Changes" />
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-muted-foreground">Asset</label>
+              <div className="grid grid-cols-4 gap-2 mt-1">
+                {CRYPTO_OPTIONS.map((asset) => (
+                  <Button
+                    key={asset.coingeckoId}
+                    type="button"
+                    variant={selectedAsset.coingeckoId === asset.coingeckoId ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setSelectedAsset(asset)}
+                  >
+                    {asset.symbol}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
+                <Input
+                  type="number"
+                  value={formEntryPrice}
+                  onChange={(e) => setFormEntryPrice(e.target.value)}
+                  placeholder="109.00"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Position Size ({selectedAsset.symbol})</label>
+                <Input
+                  type="number"
+                  value={formQuantity}
+                  onChange={(e) => setFormQuantity(e.target.value)}
+                  placeholder="250"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Cash Invested (CAD)</label>
+              <Input
+                type="number"
+                value={formInvestmentAmount}
+                onChange={(e) => setFormInvestmentAmount(e.target.value)}
+                placeholder="7700"
+                className="bg-secondary border-border mt-1"
+              />
+              <p className="text-xs text-muted-foreground mt-1">Your actual cash investment (return % based on this)</p>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Leverage</label>
+              <div className="flex gap-2 mt-1">
+                {[1, 2, 3, 5, 10].map((lev) => (
+                  <Button
+                    key={lev}
+                    type="button"
+                    variant={formLeverage === lev.toString() ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFormLeverage(lev.toString())}
+                  >
+                    {lev}x
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
+                <Input
+                  type="number"
+                  value={formStopLoss}
+                  onChange={(e) => setFormStopLoss(e.target.value)}
+                  placeholder="73"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Target (CAD)</label>
+                <Input
+                  type="number"
+                  value={formTarget}
+                  onChange={(e) => setFormTarget(e.target.value)}
+                  placeholder="330"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+            </div>
+            <Button onClick={handleEdit} className="w-full">
+              Save Changes
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
