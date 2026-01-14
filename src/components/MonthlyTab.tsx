@@ -76,7 +76,7 @@ function SortableItem({ item, onEdit, onDelete }: SortableItemProps) {
           </Badge>
         </div>
       </div>
-      <span className={`font-semibold tabular-nums ${item.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
+      <span className={`font-semibold tabular-nums text-right w-28 ${item.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
         {formatCurrency(item.amount)}
       </span>
       <div className="opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity">
@@ -341,7 +341,7 @@ export function MonthlyTab() {
             {incomeItems.length > 0 && (
               <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
                 <span className="font-medium text-muted-foreground">Total</span>
-                <span className="font-bold text-green-500 text-lg">{formatCurrency(totalIncome)}</span>
+                <span className="font-bold text-green-500 text-lg tabular-nums">{formatCurrency(totalIncome)}</span>
               </div>
             )}
           </CardContent>
@@ -394,7 +394,7 @@ export function MonthlyTab() {
             {expenseItems.length > 0 && (
               <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
                 <span className="font-medium text-muted-foreground">Total</span>
-                <span className="font-bold text-red-500 text-lg">{formatCurrency(totalExpenses)}</span>
+                <span className="font-bold text-red-500 text-lg tabular-nums">{formatCurrency(totalExpenses)}</span>
               </div>
             )}
           </CardContent>
