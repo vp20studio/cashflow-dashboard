@@ -96,7 +96,9 @@ function cashFlowReducer(state: CashFlowState, action: CashFlowAction): CashFlow
         lastPriceUpdate: action.timestamp,
         investments: state.investments.map(inv => ({
           ...inv,
-          currentPrice: action.prices[inv.coingeckoId] ?? inv.currentPrice,
+          currentPrice: inv.coingeckoId && action.prices[inv.coingeckoId]
+            ? action.prices[inv.coingeckoId]
+            : inv.currentPrice,
         })),
       };
     }
