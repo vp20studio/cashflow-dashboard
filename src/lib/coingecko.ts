@@ -14,7 +14,7 @@ export async function fetchPrices(coinIds: string[]): Promise<Record<string, num
     const response = await fetch(
       `${COINGECKO_API}/simple/price?ids=${ids}&vs_currencies=cad`,
       {
-        next: { revalidate: 1800 }, // Cache for 30 minutes
+        cache: 'no-store', // Always fetch fresh prices
       }
     );
 
