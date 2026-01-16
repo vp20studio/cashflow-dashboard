@@ -148,7 +148,7 @@ export function CashFlowProvider({ children }: { children: React.ReactNode }) {
   }, [state]);
 
   const refreshPrices = useCallback(async () => {
-    const coinIds = [...new Set(state.investments.map(inv => inv.coingeckoId))];
+    const coinIds = [...new Set(state.investments.map(inv => inv.coingeckoId).filter((id): id is string => !!id))];
     const prices = await fetchPrices(coinIds);
 
     if (Object.keys(prices).length > 0) {
