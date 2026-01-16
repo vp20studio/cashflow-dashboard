@@ -26,7 +26,7 @@ import { formatCurrency, formatPercent, formatDate } from '@/lib/formatters';
 import { Trade } from '@/lib/types';
 import { Plus, Pencil, Trash2, RefreshCw, TrendingUp, TrendingDown, Target, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
-const TOTAL_DEPOSITED = 10000; // Static $10k CAD deposited
+const TOTAL_DEPOSITED = 5000; // Static $5k CAD deposited
 
 // Common crypto options for quick selection
 const CRYPTO_PRESETS = [
@@ -248,7 +248,7 @@ export function TradingTab() {
           </div>
         </TableCell>
         <TableCell className={`text-right tabular-nums font-medium ${isProfit ? 'text-green-500' : 'text-red-500'}`}>
-          {isProfit ? '+' : ''}{formatPercent(plPercent)}
+          {formatPercent(plPercent)}
         </TableCell>
         <TableCell>
           <div className="flex gap-1">
@@ -275,255 +275,248 @@ export function TradingTab() {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Portfolio Overview Card */}
-      <Card className="bg-card border-border">
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Trading Overview</CardTitle>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-              Refresh Prices
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground">Deposited</p>
-              <p className="text-2xl font-bold tabular-nums">{formatCurrency(TOTAL_DEPOSITED)}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Current Balance</p>
-              <p className={`text-2xl font-bold tabular-nums ${currentBalance >= TOTAL_DEPOSITED ? 'text-green-500' : 'text-red-500'}`}>
-                {formatCurrency(currentBalance)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Open P/L</p>
-              <p className={`text-2xl font-bold tabular-nums ${totalOpenPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {totalOpenPL >= 0 ? '+' : ''}{formatCurrency(totalOpenPL)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Realized P/L</p>
-              <p className={`text-2xl font-bold tabular-nums ${totalClosedPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {totalClosedPL >= 0 ? '+' : ''}{formatCurrency(totalClosedPL)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Overall Return</p>
-              <p className={`text-2xl font-bold tabular-nums ${overallReturn >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {overallReturn >= 0 ? '+' : ''}{formatPercent(overallReturn)}
-              </p>
-            </div>
-          </div>
+    <div className="space-y-6">
+      {/* Portfolio Overview - Compact Stats Row */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <Card className="bg-card border-border p-4">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">Deposited</p>
+          <p className="text-xl font-bold tabular-nums mt-1">{formatCurrency(TOTAL_DEPOSITED)}</p>
+        </Card>
+        <Card className="bg-card border-border p-4">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">Balance</p>
+          <p className={`text-xl font-bold tabular-nums mt-1 ${currentBalance >= TOTAL_DEPOSITED ? 'text-green-500' : 'text-red-500'}`}>
+            {formatCurrency(currentBalance)}
+          </p>
+        </Card>
+        <Card className="bg-card border-border p-4">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">Open P/L</p>
+          <p className={`text-xl font-bold tabular-nums mt-1 ${totalOpenPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {totalOpenPL >= 0 ? '+' : ''}{formatCurrency(totalOpenPL)}
+          </p>
+        </Card>
+        <Card className="bg-card border-border p-4">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">Realized</p>
+          <p className={`text-xl font-bold tabular-nums mt-1 ${totalClosedPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {totalClosedPL >= 0 ? '+' : ''}{formatCurrency(totalClosedPL)}
+          </p>
+        </Card>
+        <Card className={`p-4 border-2 ${overallReturn >= 0 ? 'border-green-500/30 bg-green-500/5' : 'border-red-500/30 bg-red-500/5'}`}>
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">Return</p>
+          <p className={`text-xl font-bold tabular-nums mt-1 ${overallReturn >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {formatPercent(overallReturn)}
+          </p>
+        </Card>
+      </div>
+
+      {/* Action Bar */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
           {state.lastPriceUpdate && (
-            <p className="text-xs text-muted-foreground mt-4">
-              Last updated: {formatDate(state.lastPriceUpdate)}
-            </p>
+            <span className="text-xs text-muted-foreground">
+              Updated {formatDate(state.lastPriceUpdate)}
+            </span>
           )}
-        </CardContent>
-      </Card>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" onClick={resetForm}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Trade
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-card border-border max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Add Trade</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-muted-foreground">Quick Select</label>
+                  <div className="flex gap-2 mt-1">
+                    {CRYPTO_PRESETS.map((preset) => (
+                      <Button
+                        key={preset.symbol}
+                        type="button"
+                        variant={formSymbol === preset.symbol ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => selectPreset(preset)}
+                      >
+                        {preset.symbol}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-muted-foreground">Symbol (e.g., BTC)</label>
+                    <Input
+                      value={formSymbol}
+                      onChange={(e) => {
+                        const symbol = e.target.value.toUpperCase();
+                        setFormSymbol(symbol);
+                        if (SYMBOL_TO_COINGECKO[symbol]) {
+                          setFormCoingeckoId(SYMBOL_TO_COINGECKO[symbol]);
+                        }
+                      }}
+                      placeholder="BTC"
+                      className="bg-secondary border-border mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground">Asset Name (optional)</label>
+                    <Input
+                      value={formAsset}
+                      onChange={(e) => setFormAsset(e.target.value)}
+                      placeholder="Bitcoin"
+                      className="bg-secondary border-border mt-1"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground">CoinGecko ID (for live prices)</label>
+                  <Input
+                    value={formCoingeckoId}
+                    onChange={(e) => setFormCoingeckoId(e.target.value.toLowerCase())}
+                    placeholder="litecoin"
+                    className="bg-secondary border-border mt-1"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {formCoingeckoId ? '✓ Will fetch live CAD prices' : 'Leave empty for manual price entry only'}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground">Status</label>
+                  <div className="flex gap-2 mt-1">
+                    <Button
+                      type="button"
+                      variant={formStatus === 'open' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setFormStatus('open')}
+                      className={formStatus === 'open' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                    >
+                      Open
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={formStatus === 'closed' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setFormStatus('closed')}
+                      className={formStatus === 'closed' ? 'bg-gray-600 hover:bg-gray-700' : ''}
+                    >
+                      Closed
+                    </Button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
+                    <Input
+                      type="number"
+                      value={formEntryPrice}
+                      onChange={(e) => setFormEntryPrice(e.target.value)}
+                      placeholder="109.00"
+                      className="bg-secondary border-border mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground">
+                      {formStatus === 'closed' ? 'Exit Price (CAD)' : `Position Size (${formSymbol || 'units'})`}
+                    </label>
+                    <Input
+                      type="number"
+                      value={formStatus === 'closed' ? formExitPrice : formQuantity}
+                      onChange={(e) => formStatus === 'closed' ? setFormExitPrice(e.target.value) : setFormQuantity(e.target.value)}
+                      placeholder={formStatus === 'closed' ? '150.00' : '250'}
+                      className="bg-secondary border-border mt-1"
+                    />
+                  </div>
+                </div>
+                {formStatus === 'closed' && (
+                  <div>
+                    <label className="text-sm text-muted-foreground">Position Size ({formSymbol || 'units'})</label>
+                    <Input
+                      type="number"
+                      value={formQuantity}
+                      onChange={(e) => setFormQuantity(e.target.value)}
+                      placeholder="250"
+                      className="bg-secondary border-border mt-1"
+                    />
+                  </div>
+                )}
+                <div>
+                  <label className="text-sm text-muted-foreground">Risk Amount (CAD)</label>
+                  <Input
+                    type="number"
+                    value={formRiskAmount}
+                    onChange={(e) => setFormRiskAmount(e.target.value)}
+                    placeholder="1000"
+                    className="bg-secondary border-border mt-1"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">Amount risked (for return % calculation)</p>
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground">Leverage: {formLeverage[0]}x</label>
+                  <Slider
+                    value={formLeverage}
+                    onValueChange={setFormLeverage}
+                    min={1}
+                    max={100}
+                    step={1}
+                    className="mt-2"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <span>1x</span>
+                    <span>25x</span>
+                    <span>50x</span>
+                    <span>75x</span>
+                    <span>100x</span>
+                  </div>
+                </div>
+                {formStatus === 'open' && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
+                      <Input
+                        type="number"
+                        value={formStopLoss}
+                        onChange={(e) => setFormStopLoss(e.target.value)}
+                        placeholder="73"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">Target (CAD)</label>
+                      <Input
+                        type="number"
+                        value={formTarget}
+                        onChange={(e) => setFormTarget(e.target.value)}
+                        placeholder="330"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                  </div>
+                )}
+                <Button onClick={handleAdd} className="w-full">
+                  Add Trade
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
 
       {/* Trades Table */}
       <Card className="bg-card border-border">
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Trades</CardTitle>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" onClick={resetForm}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Trade
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-card border-border max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Add Trade</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm text-muted-foreground">Quick Select</label>
-                    <div className="flex gap-2 mt-1">
-                      {CRYPTO_PRESETS.map((preset) => (
-                        <Button
-                          key={preset.symbol}
-                          type="button"
-                          variant={formSymbol === preset.symbol ? 'default' : 'outline'}
-                          size="sm"
-                          onClick={() => selectPreset(preset)}
-                        >
-                          {preset.symbol}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm text-muted-foreground">Symbol (e.g., BTC)</label>
-                      <Input
-                        value={formSymbol}
-                        onChange={(e) => {
-                          const symbol = e.target.value.toUpperCase();
-                          setFormSymbol(symbol);
-                          // Auto-detect CoinGecko ID
-                          if (SYMBOL_TO_COINGECKO[symbol]) {
-                            setFormCoingeckoId(SYMBOL_TO_COINGECKO[symbol]);
-                          }
-                        }}
-                        placeholder="BTC"
-                        className="bg-secondary border-border mt-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm text-muted-foreground">Asset Name (optional)</label>
-                      <Input
-                        value={formAsset}
-                        onChange={(e) => setFormAsset(e.target.value)}
-                        placeholder="Bitcoin"
-                        className="bg-secondary border-border mt-1"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground">CoinGecko ID (for live prices)</label>
-                    <Input
-                      value={formCoingeckoId}
-                      onChange={(e) => setFormCoingeckoId(e.target.value.toLowerCase())}
-                      placeholder="litecoin"
-                      className="bg-secondary border-border mt-1"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {formCoingeckoId ? '✓ Will fetch live CAD prices' : 'Leave empty for manual price entry only'}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground">Status</label>
-                    <div className="flex gap-2 mt-1">
-                      <Button
-                        type="button"
-                        variant={formStatus === 'open' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setFormStatus('open')}
-                        className={formStatus === 'open' ? 'bg-blue-600 hover:bg-blue-700' : ''}
-                      >
-                        Open
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={formStatus === 'closed' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setFormStatus('closed')}
-                        className={formStatus === 'closed' ? 'bg-gray-600 hover:bg-gray-700' : ''}
-                      >
-                        Closed
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
-                      <Input
-                        type="number"
-                        value={formEntryPrice}
-                        onChange={(e) => setFormEntryPrice(e.target.value)}
-                        placeholder="109.00"
-                        className="bg-secondary border-border mt-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm text-muted-foreground">
-                        {formStatus === 'closed' ? 'Exit Price (CAD)' : `Position Size (${formSymbol || 'units'})`}
-                      </label>
-                      <Input
-                        type="number"
-                        value={formStatus === 'closed' ? formExitPrice : formQuantity}
-                        onChange={(e) => formStatus === 'closed' ? setFormExitPrice(e.target.value) : setFormQuantity(e.target.value)}
-                        placeholder={formStatus === 'closed' ? '150.00' : '250'}
-                        className="bg-secondary border-border mt-1"
-                      />
-                    </div>
-                  </div>
-                  {formStatus === 'closed' && (
-                    <div>
-                      <label className="text-sm text-muted-foreground">Position Size ({formSymbol || 'units'})</label>
-                      <Input
-                        type="number"
-                        value={formQuantity}
-                        onChange={(e) => setFormQuantity(e.target.value)}
-                        placeholder="250"
-                        className="bg-secondary border-border mt-1"
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <label className="text-sm text-muted-foreground">Risk Amount (CAD)</label>
-                    <Input
-                      type="number"
-                      value={formRiskAmount}
-                      onChange={(e) => setFormRiskAmount(e.target.value)}
-                      placeholder="1000"
-                      className="bg-secondary border-border mt-1"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">Amount risked (for return % calculation)</p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground">Leverage: {formLeverage[0]}x</label>
-                    <Slider
-                      value={formLeverage}
-                      onValueChange={setFormLeverage}
-                      min={1}
-                      max={100}
-                      step={1}
-                      className="mt-2"
-                    />
-                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                      <span>1x</span>
-                      <span>25x</span>
-                      <span>50x</span>
-                      <span>75x</span>
-                      <span>100x</span>
-                    </div>
-                  </div>
-                  {formStatus === 'open' && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
-                        <Input
-                          type="number"
-                          value={formStopLoss}
-                          onChange={(e) => setFormStopLoss(e.target.value)}
-                          placeholder="73"
-                          className="bg-secondary border-border mt-1"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm text-muted-foreground">Target (CAD)</label>
-                        <Input
-                          type="number"
-                          value={formTarget}
-                          onChange={(e) => setFormTarget(e.target.value)}
-                          placeholder="330"
-                          className="bg-secondary border-border mt-1"
-                        />
-                      </div>
-                    </div>
-                  )}
-                  <Button onClick={handleAdd} className="w-full">
-                    Add Trade
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <Table>
             <TableHeader>
               <TableRow className="border-border">
