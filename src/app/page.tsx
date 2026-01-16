@@ -7,8 +7,8 @@ import { CashFlowCharts } from '@/components/CashFlowCharts';
 import { CalendarView } from '@/components/CalendarView';
 import { IncomeExpenseBreakdown } from '@/components/IncomeExpenseBreakdown';
 import { MonthlyTab } from '@/components/MonthlyTab';
-import { InvestmentsTab } from '@/components/InvestmentsTab';
-import { LayoutDashboard, Calendar, TrendingUp } from 'lucide-react';
+import { TradingTab } from '@/components/TradingTab';
+import { LayoutDashboard, Calendar, CandlestickChart } from 'lucide-react';
 
 function DashboardContent() {
   return (
@@ -28,9 +28,9 @@ function DashboardContent() {
               <Calendar className="h-4 w-4 mr-2" />
               Monthly Cashflow
             </TabsTrigger>
-            <TabsTrigger value="investments" className="data-[state=active]:bg-background">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Investments
+            <TabsTrigger value="trading" className="data-[state=active]:bg-background">
+              <CandlestickChart className="h-4 w-4 mr-2" />
+              Trading
             </TabsTrigger>
           </TabsList>
 
@@ -45,8 +45,8 @@ function DashboardContent() {
             <MonthlyTab />
           </TabsContent>
 
-          <TabsContent value="investments">
-            <InvestmentsTab />
+          <TabsContent value="trading">
+            <TradingTab />
           </TabsContent>
         </Tabs>
       </div>

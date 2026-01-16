@@ -147,7 +147,7 @@ const monthsData: MonthData[] = [
   },
 ];
 
-// LTC investment position: $7,700 CAD invested, 250 LTC position size @ $109 entry
+// Initial trades - LTC position
 const initialInvestments: Investment[] = [
   {
     id: generateId(),
@@ -156,11 +156,12 @@ const initialInvestments: Investment[] = [
     coingeckoId: 'litecoin',
     entryPrice: 109,
     currentPrice: 109,
-    quantity: 250, // Actual position size in LTC
-    investedAmount: 7700, // Actual CAD invested
+    quantity: 250,
+    riskAmount: 7700,
     leverage: 3,
     stopLoss: 73,
     target: 330,
+    status: 'open',
     currency: 'CAD',
   },
 ];

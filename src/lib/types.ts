@@ -15,20 +15,25 @@ export interface MonthData {
   lineItemOrder: string[]; // IDs in display order
 }
 
-export interface Investment {
+export interface Trade {
   id: string;
   asset: string;
   symbol: string;
-  coingeckoId: string;
+  coingeckoId?: string; // Optional - for live price tracking
   entryPrice: number;
   currentPrice: number;
+  exitPrice?: number; // For closed trades
   quantity: number; // Actual position size in the asset (e.g., 250 LTC)
-  investedAmount: number; // Actual cash invested (e.g., $7,700 CAD)
+  riskAmount: number; // Amount risked on this trade
   leverage: number;
   stopLoss: number;
   target: number;
+  status: 'open' | 'closed';
   currency: string;
 }
+
+// Keep Investment as alias for backwards compatibility
+export type Investment = Trade;
 
 export interface CashFlowState {
   months: MonthData[];
