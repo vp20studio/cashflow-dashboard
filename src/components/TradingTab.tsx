@@ -36,6 +36,24 @@ const CRYPTO_PRESETS = [
   { name: 'Solana', symbol: 'SOL', coingeckoId: 'solana' },
 ];
 
+// Map symbols to CoinGecko IDs for auto-detection
+const SYMBOL_TO_COINGECKO: Record<string, string> = {
+  'BTC': 'bitcoin',
+  'ETH': 'ethereum',
+  'LTC': 'litecoin',
+  'SOL': 'solana',
+  'XRP': 'ripple',
+  'ADA': 'cardano',
+  'DOGE': 'dogecoin',
+  'DOT': 'polkadot',
+  'AVAX': 'avalanche-2',
+  'LINK': 'chainlink',
+  'MATIC': 'matic-network',
+  'UNI': 'uniswap',
+  'ATOM': 'cosmos',
+  'XLM': 'stellar',
+};
+
 function calculateTradePL(trade: Trade): { pl: number; plPercent: number } {
   const priceToUse = trade.status === 'closed' && trade.exitPrice ? trade.exitPrice : trade.currentPrice;
   const pl = (priceToUse - trade.entryPrice) * trade.quantity;
@@ -351,7 +369,14 @@ export function TradingTab() {
                       <label className="text-sm text-muted-foreground">Symbol (e.g., BTC)</label>
                       <Input
                         value={formSymbol}
-                        onChange={(e) => setFormSymbol(e.target.value.toUpperCase())}
+                        onChange={(e) => {
+                          const symbol = e.target.value.toUpperCase();
+                          setFormSymbol(symbol);
+                          // Auto-detect CoinGecko ID
+                          if (SYMBOL_TO_COINGECKO[symbol]) {
+                            setFormCoingeckoId(SYMBOL_TO_COINGECKO[symbol]);
+                          }
+                        }}
                         placeholder="BTC"
                         className="bg-secondary border-border mt-1"
                       />
@@ -365,6 +390,18 @@ export function TradingTab() {
                         className="bg-secondary border-border mt-1"
                       />
                     </div>
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground">CoinGecko ID (for live prices)</label>
+                    <Input
+                      value={formCoingeckoId}
+                      onChange={(e) => setFormCoingeckoId(e.target.value.toLowerCase())}
+                      placeholder="litecoin"
+                      className="bg-secondary border-border mt-1"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {formCoingeckoId ? '✓ Will fetch live CAD prices' : 'Leave empty for manual price entry only'}
+                    </p>
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground">Status</label>
@@ -554,7 +591,14 @@ export function TradingTab() {
                 <label className="text-sm text-muted-foreground">Symbol (e.g., BTC)</label>
                 <Input
                   value={formSymbol}
-                  onChange={(e) => setFormSymbol(e.target.value.toUpperCase())}
+                  onChange={(e) => {
+                    const symbol = e.target.value.toUpperCase();
+                    setFormSymbol(symbol);
+                    // Auto-detect CoinGecko ID
+                    if (SYMBOL_TO_COINGECKO[symbol]) {
+                      setFormCoingeckoId(SYMBOL_TO_COINGECKO[symbol]);
+                    }
+                  }}
                   placeholder="BTC"
                   className="bg-secondary border-border mt-1"
                 />
@@ -568,6 +612,18 @@ export function TradingTab() {
                   className="bg-secondary border-border mt-1"
                 />
               </div>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">CoinGecko ID (for live prices)</label>
+              <Input
+                value={formCoingeckoId}
+                onChange={(e) => setFormCoingeckoId(e.target.value.toLowerCase())}
+                placeholder="litecoin"
+                className="bg-secondary border-border mt-1"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                {formCoingeckoId ? '✓ Will fetch live CAD prices' : 'Leave empty for manual price entry only'}
+              </p>
             </div>
             <div>
               <label className="text-sm text-muted-foreground">Status</label>
