@@ -256,185 +256,6 @@ export function TradingTab() {
     );
   };
 
-  const FormContent = () => (
-    <div className="space-y-4">
-      {/* Quick Presets */}
-      <div>
-        <label className="text-sm text-muted-foreground">Quick Select</label>
-        <div className="flex gap-2 mt-1">
-          {CRYPTO_PRESETS.map((preset) => (
-            <Button
-              key={preset.symbol}
-              type="button"
-              variant={formSymbol === preset.symbol ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => selectPreset(preset)}
-            >
-              {preset.symbol}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {/* Custom Ticker Input */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-muted-foreground">Symbol (e.g., BTC)</label>
-          <Input
-            value={formSymbol}
-            onChange={(e) => setFormSymbol(e.target.value.toUpperCase())}
-            placeholder="BTC"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm text-muted-foreground">Asset Name (optional)</label>
-          <Input
-            value={formAsset}
-            onChange={(e) => setFormAsset(e.target.value)}
-            placeholder="Bitcoin"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-      </div>
-
-      {/* Status */}
-      <div>
-        <label className="text-sm text-muted-foreground">Status</label>
-        <div className="flex gap-2 mt-1">
-          <Button
-            type="button"
-            variant={formStatus === 'open' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFormStatus('open')}
-            className={formStatus === 'open' ? 'bg-blue-600 hover:bg-blue-700' : ''}
-          >
-            Open
-          </Button>
-          <Button
-            type="button"
-            variant={formStatus === 'closed' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFormStatus('closed')}
-            className={formStatus === 'closed' ? 'bg-gray-600 hover:bg-gray-700' : ''}
-          >
-            Closed
-          </Button>
-        </div>
-      </div>
-
-      {/* Prices */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
-          <Input
-            type="number"
-            value={formEntryPrice}
-            onChange={(e) => setFormEntryPrice(e.target.value)}
-            placeholder="109.00"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-        {formStatus === 'closed' && (
-          <div>
-            <label className="text-sm text-muted-foreground">Exit Price (CAD)</label>
-            <Input
-              type="number"
-              value={formExitPrice}
-              onChange={(e) => setFormExitPrice(e.target.value)}
-              placeholder="150.00"
-              className="bg-secondary border-border mt-1"
-            />
-          </div>
-        )}
-        {formStatus === 'open' && (
-          <div>
-            <label className="text-sm text-muted-foreground">Position Size ({formSymbol || 'units'})</label>
-            <Input
-              type="number"
-              value={formQuantity}
-              onChange={(e) => setFormQuantity(e.target.value)}
-              placeholder="250"
-              className="bg-secondary border-border mt-1"
-            />
-          </div>
-        )}
-      </div>
-
-      {formStatus === 'closed' && (
-        <div>
-          <label className="text-sm text-muted-foreground">Position Size ({formSymbol || 'units'})</label>
-          <Input
-            type="number"
-            value={formQuantity}
-            onChange={(e) => setFormQuantity(e.target.value)}
-            placeholder="250"
-            className="bg-secondary border-border mt-1"
-          />
-        </div>
-      )}
-
-      {/* Risk Amount */}
-      <div>
-        <label className="text-sm text-muted-foreground">Risk Amount (CAD)</label>
-        <Input
-          type="number"
-          value={formRiskAmount}
-          onChange={(e) => setFormRiskAmount(e.target.value)}
-          placeholder="1000"
-          className="bg-secondary border-border mt-1"
-        />
-        <p className="text-xs text-muted-foreground mt-1">Amount risked on this trade (for return % calculation)</p>
-      </div>
-
-      {/* Leverage Slider */}
-      <div>
-        <label className="text-sm text-muted-foreground">Leverage: {formLeverage[0]}x</label>
-        <Slider
-          value={formLeverage}
-          onValueChange={setFormLeverage}
-          min={1}
-          max={100}
-          step={1}
-          className="mt-2"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground mt-1">
-          <span>1x</span>
-          <span>25x</span>
-          <span>50x</span>
-          <span>75x</span>
-          <span>100x</span>
-        </div>
-      </div>
-
-      {/* SL/TP - only for open trades */}
-      {formStatus === 'open' && (
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
-            <Input
-              type="number"
-              value={formStopLoss}
-              onChange={(e) => setFormStopLoss(e.target.value)}
-              placeholder="73"
-              className="bg-secondary border-border mt-1"
-            />
-          </div>
-          <div>
-            <label className="text-sm text-muted-foreground">Target (CAD)</label>
-            <Input
-              type="number"
-              value={formTarget}
-              onChange={(e) => setFormTarget(e.target.value)}
-              placeholder="330"
-              className="bg-secondary border-border mt-1"
-            />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-
   return (
     <div className="space-y-4">
       {/* Portfolio Overview Card */}
@@ -508,10 +329,159 @@ export function TradingTab() {
                 <DialogHeader>
                   <DialogTitle>Add Trade</DialogTitle>
                 </DialogHeader>
-                <FormContent />
-                <Button onClick={handleAdd} className="w-full mt-4">
-                  Add Trade
-                </Button>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm text-muted-foreground">Quick Select</label>
+                    <div className="flex gap-2 mt-1">
+                      {CRYPTO_PRESETS.map((preset) => (
+                        <Button
+                          key={preset.symbol}
+                          type="button"
+                          variant={formSymbol === preset.symbol ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => selectPreset(preset)}
+                        >
+                          {preset.symbol}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-muted-foreground">Symbol (e.g., BTC)</label>
+                      <Input
+                        value={formSymbol}
+                        onChange={(e) => setFormSymbol(e.target.value.toUpperCase())}
+                        placeholder="BTC"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">Asset Name (optional)</label>
+                      <Input
+                        value={formAsset}
+                        onChange={(e) => setFormAsset(e.target.value)}
+                        placeholder="Bitcoin"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground">Status</label>
+                    <div className="flex gap-2 mt-1">
+                      <Button
+                        type="button"
+                        variant={formStatus === 'open' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setFormStatus('open')}
+                        className={formStatus === 'open' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                      >
+                        Open
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={formStatus === 'closed' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setFormStatus('closed')}
+                        className={formStatus === 'closed' ? 'bg-gray-600 hover:bg-gray-700' : ''}
+                      >
+                        Closed
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
+                      <Input
+                        type="number"
+                        value={formEntryPrice}
+                        onChange={(e) => setFormEntryPrice(e.target.value)}
+                        placeholder="109.00"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">
+                        {formStatus === 'closed' ? 'Exit Price (CAD)' : `Position Size (${formSymbol || 'units'})`}
+                      </label>
+                      <Input
+                        type="number"
+                        value={formStatus === 'closed' ? formExitPrice : formQuantity}
+                        onChange={(e) => formStatus === 'closed' ? setFormExitPrice(e.target.value) : setFormQuantity(e.target.value)}
+                        placeholder={formStatus === 'closed' ? '150.00' : '250'}
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                  </div>
+                  {formStatus === 'closed' && (
+                    <div>
+                      <label className="text-sm text-muted-foreground">Position Size ({formSymbol || 'units'})</label>
+                      <Input
+                        type="number"
+                        value={formQuantity}
+                        onChange={(e) => setFormQuantity(e.target.value)}
+                        placeholder="250"
+                        className="bg-secondary border-border mt-1"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <label className="text-sm text-muted-foreground">Risk Amount (CAD)</label>
+                    <Input
+                      type="number"
+                      value={formRiskAmount}
+                      onChange={(e) => setFormRiskAmount(e.target.value)}
+                      placeholder="1000"
+                      className="bg-secondary border-border mt-1"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">Amount risked (for return % calculation)</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground">Leverage: {formLeverage[0]}x</label>
+                    <Slider
+                      value={formLeverage}
+                      onValueChange={setFormLeverage}
+                      min={1}
+                      max={100}
+                      step={1}
+                      className="mt-2"
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>1x</span>
+                      <span>25x</span>
+                      <span>50x</span>
+                      <span>75x</span>
+                      <span>100x</span>
+                    </div>
+                  </div>
+                  {formStatus === 'open' && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
+                        <Input
+                          type="number"
+                          value={formStopLoss}
+                          onChange={(e) => setFormStopLoss(e.target.value)}
+                          placeholder="73"
+                          className="bg-secondary border-border mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm text-muted-foreground">Target (CAD)</label>
+                        <Input
+                          type="number"
+                          value={formTarget}
+                          onChange={(e) => setFormTarget(e.target.value)}
+                          placeholder="330"
+                          className="bg-secondary border-border mt-1"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <Button onClick={handleAdd} className="w-full">
+                    Add Trade
+                  </Button>
+                </div>
               </DialogContent>
             </Dialog>
           </div>
@@ -562,10 +532,159 @@ export function TradingTab() {
           <DialogHeader>
             <DialogTitle>Edit Trade</DialogTitle>
           </DialogHeader>
-          <FormContent />
-          <Button onClick={handleEdit} className="w-full mt-4">
-            Save Changes
-          </Button>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-muted-foreground">Quick Select</label>
+              <div className="flex gap-2 mt-1">
+                {CRYPTO_PRESETS.map((preset) => (
+                  <Button
+                    key={preset.symbol}
+                    type="button"
+                    variant={formSymbol === preset.symbol ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => selectPreset(preset)}
+                  >
+                    {preset.symbol}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Symbol (e.g., BTC)</label>
+                <Input
+                  value={formSymbol}
+                  onChange={(e) => setFormSymbol(e.target.value.toUpperCase())}
+                  placeholder="BTC"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Asset Name (optional)</label>
+                <Input
+                  value={formAsset}
+                  onChange={(e) => setFormAsset(e.target.value)}
+                  placeholder="Bitcoin"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Status</label>
+              <div className="flex gap-2 mt-1">
+                <Button
+                  type="button"
+                  variant={formStatus === 'open' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFormStatus('open')}
+                  className={formStatus === 'open' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                >
+                  Open
+                </Button>
+                <Button
+                  type="button"
+                  variant={formStatus === 'closed' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFormStatus('closed')}
+                  className={formStatus === 'closed' ? 'bg-gray-600 hover:bg-gray-700' : ''}
+                >
+                  Closed
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Entry Price (CAD)</label>
+                <Input
+                  type="number"
+                  value={formEntryPrice}
+                  onChange={(e) => setFormEntryPrice(e.target.value)}
+                  placeholder="109.00"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">
+                  {formStatus === 'closed' ? 'Exit Price (CAD)' : `Position Size (${formSymbol || 'units'})`}
+                </label>
+                <Input
+                  type="number"
+                  value={formStatus === 'closed' ? formExitPrice : formQuantity}
+                  onChange={(e) => formStatus === 'closed' ? setFormExitPrice(e.target.value) : setFormQuantity(e.target.value)}
+                  placeholder={formStatus === 'closed' ? '150.00' : '250'}
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+            </div>
+            {formStatus === 'closed' && (
+              <div>
+                <label className="text-sm text-muted-foreground">Position Size ({formSymbol || 'units'})</label>
+                <Input
+                  type="number"
+                  value={formQuantity}
+                  onChange={(e) => setFormQuantity(e.target.value)}
+                  placeholder="250"
+                  className="bg-secondary border-border mt-1"
+                />
+              </div>
+            )}
+            <div>
+              <label className="text-sm text-muted-foreground">Risk Amount (CAD)</label>
+              <Input
+                type="number"
+                value={formRiskAmount}
+                onChange={(e) => setFormRiskAmount(e.target.value)}
+                placeholder="1000"
+                className="bg-secondary border-border mt-1"
+              />
+              <p className="text-xs text-muted-foreground mt-1">Amount risked (for return % calculation)</p>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Leverage: {formLeverage[0]}x</label>
+              <Slider
+                value={formLeverage}
+                onValueChange={setFormLeverage}
+                min={1}
+                max={100}
+                step={1}
+                className="mt-2"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                <span>1x</span>
+                <span>25x</span>
+                <span>50x</span>
+                <span>75x</span>
+                <span>100x</span>
+              </div>
+            </div>
+            {formStatus === 'open' && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-muted-foreground">Stop Loss (CAD)</label>
+                  <Input
+                    type="number"
+                    value={formStopLoss}
+                    onChange={(e) => setFormStopLoss(e.target.value)}
+                    placeholder="73"
+                    className="bg-secondary border-border mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground">Target (CAD)</label>
+                  <Input
+                    type="number"
+                    value={formTarget}
+                    onChange={(e) => setFormTarget(e.target.value)}
+                    placeholder="330"
+                    className="bg-secondary border-border mt-1"
+                  />
+                </div>
+              </div>
+            )}
+            <Button onClick={handleEdit} className="w-full">
+              Save Changes
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
